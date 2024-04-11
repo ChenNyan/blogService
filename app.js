@@ -27,7 +27,12 @@ app.use((req, res, next) => {
 const jwt = require("express-jwt")
 const config = require("./config")
 app.use(
-  jwt({secret: config.jwtSecretKey, algorithms: ["HS256"]}).unless({
+  jwt({secret: config.jwtSecretKey,requestProperty: 'token', algorithms: ["HS256"],getToken: function fromHeaderOrQuerystring (req) {
+      if (req.headers.token) {
+        return req.headers.token
+      }
+      return null
+    }}).unless({
     path: ['/register', '/login'],
   })
 )
@@ -36,6 +41,8 @@ const loginRouter = require("./router/login")
 app.use(loginRouter)
 const infoRouter = require("./router/userInfo")
 app.use(infoRouter)
+const cateRouter = require("./router/cate")
+app.use(cateRouter)
 
 app.use((err, req, res, next) => {
   if (err instanceof joi.ValidationError) return res.output(err);
