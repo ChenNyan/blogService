@@ -43,6 +43,8 @@ const infoRouter = require("./router/userInfo")
 app.use(infoRouter)
 const cateRouter = require("./router/cate")
 app.use(cateRouter)
+const articleRouter = require("./router/article")
+app.use(articleRouter)
 
 app.use((err, req, res, next) => {
   if (err instanceof joi.ValidationError) return res.output(err);
